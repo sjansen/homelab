@@ -1,0 +1,16 @@
+---
+- name: Don't require a password from group wheel for sudo
+  ansible.builtin.lineinfile:
+    path: /etc/sudoers
+    insertafter: '## Allows people in group wheel to run all commands'
+    regexp: '^%wheel\s+ALL=(ALL)\s+ALL$'
+    line: "# %wheel\tALL=(ALL)\tALL"
+- name: Allows group wheel to sudo without a password
+  ansible.builtin.lineinfile:
+    path: /etc/sudoers
+    insertafter: '## Same thing without a password'
+    regexp: '^(%wheel\s+ALL=|#\s+%wheel\s+ALL=(ALL)\s+NOPASSWD:\s+ALL)'
+    line: "%wheel  ALL=(ALL)  NOPASSWD: ALL"
+    owner: root
+    group: root
+    mode: '0440'

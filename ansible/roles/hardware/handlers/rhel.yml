@@ -1,0 +1,7 @@
+---
+- name: Update GRUB
+  ansible.builtin.command:
+   cmd: grub2-mkconfig -o /boot/grub2/grub.cfg --update-bls-cmdline
+  register: grub2_mkconfig_output
+  changed_when: grub2_mkconfig_output.rc == 0
+  failed_when: grub2_mkconfig_output.rc != 0

@@ -1,0 +1,25 @@
+---
+- name: Configure homelab
+  hosts: homelab
+  become: true
+  become_method: 'ansible.builtin.sudo'
+  tasks:
+    - name: Configure RHEL on physical hardware
+      ansible.builtin.include_role:
+        name: hardware
+        defaults_from: rhel
+        handlers_from: rhel
+        tasks_from: rhel
+        vars_from: rhel
+      when: "ansible_facts['os_family'] == 'RedHat'"
+    - name: Configure SELinux on RHEL
+      ansible.builtin.include_role:
+        name: selinux
+        defaults_from: rhel
+        handlers_from: rhel
+        tasks_from: rhel
+        vars_from: rhel
+      when: "ansible_facts['os_family'] == 'RedHat'"
+    - name: Configure base system
+      ansible.builtin.include_role:
+        name: common

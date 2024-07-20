@@ -1,0 +1,19 @@
+---
+- name: Disable console cursor blinking
+  ansible.builtin.copy:
+   dest: /etc/tmpfiles.d/cursor_blink.conf
+   content: "w /sys/class/graphics/fbcon/cursor_blink - - - - 0\n"
+   owner: root
+   group: root
+   mode: '0644'
+
+- name: Enable console blanking
+  ansible.builtin.replace:
+   path: /etc/default/grub
+   backup: true
+   regexp: '^(GRUB_CMDLINE_LINUX=.+) rhgb( quiet)?(.*)$'
+   replace: '\1 consoleblank=300 quiet\3'
+   owner: root
+   group: root
+   mode: '0644'
+  notify: Update GRUB
